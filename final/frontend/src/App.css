@@ -1,33 +1,180 @@
-body {
-  font-family: Arial, sans-serif;
-  padding-top: 70px; /* Add this line to ensure content is not hidden behind the navbar */
+/* Solid Components */
+.glass-card {
+  background: var(--surface-bg);
+  border: 1px solid var(--surface-border);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: var(--surface-shadow);
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  color: var(--text-main) !important;
 }
 
-nav ul {
-  list-style-type: none;
-  padding: 0;
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
 }
 
-nav ul li {
-  display: inline;
-  margin-right: 20px;
+.glass-card-sm {
+  padding: 1rem;
 }
 
-nav ul li a {
-  text-decoration: none;
-  color: black;
+/* Typography Utilities */
+.gradient-text {
+  background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+  font-weight: 700;
 }
 
-h1 {
-  font-size: 24px;
-  margin-bottom: 20px;
+/* Fix Bootstrap's text-muted for dark mode */
+.text-muted {
+  color: var(--text-muted) !important;
 }
 
-.card {
-  margin: 20px 0;
-}
-
-button {
+/* Premium Buttons */
+.btn-premium {
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  color: white !important;
+  border: none;
+  padding: 10px 24px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
   cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
 }
 
+.btn-premium:hover {
+  filter: brightness(1.2);
+  transform: scale(1.05);
+  color: white;
+}
+
+.btn-outline-premium {
+  background: transparent;
+  border: 2px solid var(--accent-primary);
+  color: var(--accent-primary);
+  padding: 8px 22px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+
+.btn-outline-premium:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+/* Forms */
+.form-control, .form-select {
+  background: var(--bg-primary) !important; /* Solid dark background */
+  border: 1px solid var(--surface-border) !important;
+  color: var(--text-main) !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 10px 15px !important;
+}
+
+.form-control:focus, .form-select:focus {
+  background: var(--bg-primary) !important;
+  box-shadow: 0 0 0 0.25rem rgba(168, 85, 247, 0.25) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+.form-label {
+  color: #f8fafc;
+  font-weight: 600;
+}
+
+/* Nav Overrides */
+.navbar-glass {
+  background: var(--surface-bg) !important; /* Solid lighter background for contrast */
+  border-bottom: 1px solid var(--surface-border);
+  padding: 1rem 2rem;
+  box-shadow: var(--surface-shadow);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.navbar-brand, .navbar-nav .nav-link, .nav-link {
+  color: #f8fafc !important; /* Explicitly use white text to ensure visibility */
+}
+
+.nav-link {
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.nav-link:hover {
+  color: var(--accent-primary) !important;
+}
+
+/* Tables */
+.table {
+  color: var(--text-main) !important;
+  background-color: var(--surface-bg) !important;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: var(--bg-primary) !important;
+}
+.table th, .table td {
+  border-color: var(--surface-border);
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--surface-bg) !important;
+  border: 1px solid var(--surface-border) !important;
+  border-radius: var(--radius-lg);
+}
+.modal-header, .modal-footer {
+  border-color: var(--surface-border) !important;
+}
+.modal-title {
+  color: var(--text-main);
+}
+
+/* Layout helpers */
+.main-content {
+  padding-top: 2rem;
+  padding-bottom: 4rem;
+}
+
+/* Photo Cards */
+.photo-box {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--surface-border);
+}
+
+.photo-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.photo-box:hover img {
+  transform: scale(1.08);
+}
+
+.photo-caption {
+  position: absolute;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  text-align: center;
+  font-weight: 600;
+}

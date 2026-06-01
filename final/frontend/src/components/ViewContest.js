@@ -315,9 +315,9 @@ const ViewContests = () => {
 
   const renderContests = (contests, isPast) =>
     contests.map((contest, index) => (
-      <Col md={4} key={index} className="mb-4">
-        <Card>
-          <Card.Body>
+      <Col md={4} key={index} className="mb-4 d-flex align-items-stretch">
+        <Card className="glass-card glass-card-sm w-100">
+          <Card.Body className="d-flex flex-column">
             <Card.Title>{contest.title}</Card.Title>
             <Card.Text>{contest.description}</Card.Text>
             <Card.Text>
@@ -338,26 +338,27 @@ const ViewContests = () => {
               </Card.Text>
             )}
   
+            <div className="mt-auto pt-3">
             {isPast ? (
               <Button
-                variant="info"
-                className="me-2"
+                className="btn-premium me-2"
                 onClick={() => handleViewClick(contest.title, true)}
               >
                 View Winner
               </Button>
             ) : new Date(contest.start_date) > today ? (
-              <Button variant="secondary" disabled>
+              <Button className="btn btn-secondary disabled">
                 Wait
               </Button>
             ) : (
               <Button
-                variant="primary"
+                className="btn-premium"
                 onClick={() => handleJoinClick(contest)}
               >
                 Join
               </Button>
             )}
+            </div>
           </Card.Body>
         </Card>
       </Col>
@@ -376,52 +377,7 @@ const ViewContests = () => {
     );
 
   return (
-    <Container>
-      <style>
-        {`
-
-            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-
-                body, .navbar, .navbar-brand, .nav-link, .btn, .card-title, .card-text, .text-muted {
-                    font-family: 'Raleway', sans-serif;
-                    }
-                    .modal-dialog {
-                       display: flex;
-                       align-items: center;
-                     min-height: 100vh;
-                    }
-                     /* Make all buttons purple */
-    .btn, .btn-primary, .btn-outline-primary, 
-    .btn-secondary, .btn-outline-secondary,
-    .btn-success, .btn-outline-success {
-      background-color: purple !important;
-      color: white !important;
-      border: none !important;
-    }
-
-    .btn:hover, .btn:focus {
-      background-color: #6a0dad !important; /* Darker purple on hover */
-    }
-
-    /* Optional: keep outline buttons border purple */
-    .btn-outline-primary, .btn-outline-secondary, .btn-outline-success {
-      border: 2px solid purple !important;
-      background-color: transparent !important;
-      color: purple !important;
-    }
-
-    .btn-outline-primary:hover, .btn-outline-secondary:hover, .btn-outline-success:hover {
-      background-color: purple !important;
-      color: white !important;
-    }
-      .text-danger {
-  font-weight: bold;
-}
-
-
-
-                `}
-      </style>
+    <Container className="main-content">
 
       {selectedContest ? (
         viewingPastContest ? (
@@ -529,17 +485,9 @@ const ViewContests = () => {
 
 <Button
   type="submit"
-  className="mt-3"
+  className={`mt-3 ${admin ? "btn btn-secondary" : "btn-premium"}`}
   disabled={!!admin}
   title={admin ? "Admins cannot join contests" : "Submit your photo"}
-  style={{
-    backgroundColor: admin ? "gray" : "purple",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    padding: "10px 20px",
-    cursor: admin ? "not-allowed" : "pointer",
-  }}
 >
   Submit
 </Button>

@@ -202,91 +202,11 @@ const AdminDashboard = () => {
 
   return (
     <div className="container">
-      <style>{`
-             
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
-
-
-                body {
-                    font-family: "Playfair Display", serif;
-                }
-
-                .container {
-                    padding-top: 10px;
-                }
-                   
-
-                .modal-dialog {
-  display: flex;
-  align-items: center;
-  min-height: 100vh;
-}
-
-
-
-
-                .card {
-                    border: 1px solid #ddd;
-                    border-radius: 10px;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                }
-
-                .card-title {
-                    font-size: 1.25rem;
-                    font-weight: 700;
-                }
-
-                .card-text {
-                    font-size: 0.9rem;
-                }
-
-                .form-group {
-                    margin-bottom: 1rem;
-                }
-
-                .btn,
-.btn-primary{
-  background-color: purple !important;
-  border: none !important;
-  color: white !important;
-  font-size: 18px;
-  border-radius: 5px;
-  padding: 10px 16px;
-  cursor: pointer;
-  margin: 10px 5px;
-  transition: background-color 0.3s ease;
-}
-
-.btn:hover {
-  background-color: #5e007e !important; /* darker purple on hover */
-}
-  .btn-small {
-  font-size: 14px;
-  padding: 5px 10px;
-  margin: 5px 5px;
-  background-color: purple !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 4px;
-}
-.btn-small {
-  font-size: 14px;
-  padding: 5px 10px;
-  margin: 5px 5px;
-  background-color: purple !important;
-  color: white !important;
-  border: none !important;
-  border-radius: 4px;
-}
-
-
-
-            `}</style>
-      <h2 className="text-center mt-4">Admin Dashboard</h2>
+      <h2 className="text-center mt-4 gradient-text">Admin Dashboard</h2>
 
       <h3 className="text-center mt-4">Create Contest</h3>
-      <div className="d-flex justify-content-center align-items-center">
-        <Button variant="primary" onClick={() => setShowCreateModal(true)}>
+      <div className="d-flex justify-content-center align-items-center mb-5">
+        <Button className="btn-premium" onClick={() => setShowCreateModal(true)}>
           Create Contest
         </Button>
       </div>
@@ -295,7 +215,7 @@ const AdminDashboard = () => {
       <div className="d-flex flex-wrap justify-content-center">
         {contests.map((contest) => (
           <div className="col-md-4 d-flex" key={contest._id}>
-            <div className="card mb-4">
+            <div className="glass-card mb-4 w-100 p-4">
               <div className="card-body">
                 <h5 className="card-title">{contest.title}</h5>
                 <p className="card-text">{contest.description}</p>
@@ -315,24 +235,26 @@ const AdminDashboard = () => {
                     })}
                   </small>
                 </p>
+                <div className="mt-3">
                 <Button
-                 className="btn-small"
+                 className="btn-premium me-2 mb-2"
                   onClick={() => handleEditContest(contest)}
                 >
                   Edit
                 </Button>
                 <Button
-                  className="btn-small"
+                  className="btn-outline-premium me-2 mb-2"
                   onClick={() => openDeleteModal(contest)}
                 >
                   Delete
                 </Button>
                 <Button
-                  className="btn-small"
+                  className="btn-premium mb-2"
                   onClick={() => handleViewContest(contest)}
                 >
                   View Photos
                 </Button>
+                </div>
               </div>
             </div>
           </div>
@@ -389,7 +311,7 @@ const AdminDashboard = () => {
                 required
               />
             </div>
-            <Button variant="primary" type="submit">
+            <Button className="btn-premium mt-3" type="submit">
               Create Contest
             </Button>
           </form>
@@ -447,7 +369,7 @@ const AdminDashboard = () => {
                   required
                 />
               </div>
-              <Button variant="primary" type="submit">
+              <Button className="btn-premium mt-3" type="submit">
                 Update Contest
               </Button>
             </form>
@@ -467,7 +389,7 @@ const AdminDashboard = () => {
               {contestToDelete.title}"?
             </p>
             <Button
-              className="btn-small"
+              className="btn-outline-premium mt-3"
               onClick={() => handleDeleteContest(contestToDelete)}
             >
               Delete

@@ -140,60 +140,48 @@ const UserLogin = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center" style={{ color: 'black' }}>Login</h2>
+    <div className="container main-content d-flex justify-content-center align-items-center flex-column">
+      <h2 className="text-center gradient-text mb-4">Login</h2>
       {message && <div className="alert alert-success text-center">{message}</div>}
       {error && <div className="alert alert-danger text-center">{error}</div>}
-      <form onSubmit={handleLogin} className="mx-auto shadow p-4 rounded bg-light" style={{ maxWidth: '400px', border: '2px solid purple' }}>
-        <div className="form-group">
-          <label style={{ fontWeight: 'bold', color: 'black' }}>Email:</label>
+      <form onSubmit={handleLogin} className="glass-card w-100" style={{ maxWidth: '400px' }}>
+        <div className="form-group mb-3">
+          <label className="form-label">Email:</label>
           <input
             type="email"
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ borderColor: 'purple', borderWidth: '2px' }}
           />
         </div>
-        <br />
-        <div className="form-group">
-          <label style={{ fontWeight: 'bold', color: 'black' }}>Password:</label>
+        <div className="form-group mb-4">
+          <label className="form-label">Password:</label>
           <input
             type="password"
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ borderColor: 'purple', borderWidth: '2px' }}
           />
         </div>
-        <button type="submit" className="btn btn-primary d-block mx-auto mt-4" style={{ backgroundColor: "purple",
-    border: "none",
-    fontSize: "20px",
-    color: "white",
-    borderRadius: "5px",
-    padding: "10px",
-    cursor: "pointer",
-    margin: "10px 0",
-    fontWeight: "bold", }}>
+        <button type="submit" className="btn-premium w-100">
           {loading ? <Spinner animation="border" size="sm" /> : 'Login'}
         </button>
         <p className="text-center mt-3">
           <button
             type="button"
-            className="btn btn-link"
+            className="btn btn-link text-light text-decoration-none"
             onClick={() => setShowModal(true)}
-            style={{ color: 'black', fontWeight: 'bold' }}
           >
             Forgot Password?
           </button>
         </p>
       </form>
 
-      <Modal show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton>
-          <Modal.Title style={{ color: 'black', fontWeight: 'bold' }}>
+      <Modal show={showModal} onHide={closeModal} centered>
+        <Modal.Header closeButton className="border-0">
+          <Modal.Title className="gradient-text">
             {modalStep === 'forgotPassword' ? 'Forgot Password' : 'Reset Password'}
           </Modal.Title>
         </Modal.Header>
@@ -203,19 +191,17 @@ const UserLogin = () => {
 
           {modalStep === 'forgotPassword' && (
             <form onSubmit={handleForgotPassword}>
-              <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: 'black' }}>Email:</label>
+              <div className="form-group mb-3">
+                <label className="form-label">Email:</label>
                 <input
                   type="email"
                   className="form-control"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  style={{ borderColor: 'purple', borderWidth: '2px' }}
                 />
               </div>
-              <br />
-              <button type="submit" className="btn btn-primary d-block mx-auto mt-4" style={{ backgroundColor: 'purple', borderColor: '#007bff', fontWeight: 'bold' }}>
+              <button type="submit" className="btn-premium w-100 mt-2">
                 {loading ? <Spinner animation="border" size="sm" /> : 'Send OTP'}
               </button>
             </form>
@@ -223,8 +209,8 @@ const UserLogin = () => {
 
           {modalStep === 'resetPassword' && (
             <form onSubmit={handleResetPassword}>
-              <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#007bff' }}>OTP:</label>
+              <div className="form-group mb-3">
+                <label className="form-label">OTP:</label>
                 <div className="d-flex justify-content-between">
                   {otp.map((data, index) => (
                     <input
@@ -236,14 +222,13 @@ const UserLogin = () => {
                       onChange={(e) => handleOtpChange(e.target, index)}
                       onFocus={(e) => e.target.select()}
                       className="form-control text-center"
-                      style={{ width: '3rem', marginRight: '0.5rem', borderColor: '#007bff', borderWidth: '2px' }}
+                      style={{ width: '3rem', marginRight: '0.5rem' }}
                     />
                   ))}
                 </div>
               </div>
-              <br />
-              <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#007bff' }}>New Password:</label>
+              <div className="form-group mb-3">
+                <label className="form-label">New Password:</label>
                 <input
                   type="password"
                   className="form-control"
@@ -251,12 +236,10 @@ const UserLogin = () => {
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   placeholder="Enter new password"
-                  style={{ borderColor: '#007bff', borderWidth: '2px' }}
                 />
               </div>
-              <br />
-              <div className="form-group">
-                <label style={{ fontWeight: 'bold', color: '#007bff' }}>Confirm Password:</label>
+              <div className="form-group mb-3">
+                <label className="form-label">Confirm Password:</label>
                 <input
                   type="password"
                   className="form-control"
@@ -264,18 +247,16 @@ const UserLogin = () => {
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
                   placeholder="Confirm new password"
-                  style={{ borderColor: '#007bff', borderWidth: '2px' }}
                 />
               </div>
-              <br />
-              <button type="submit" className="btn btn-primary d-block mx-auto mt-4" style={{ backgroundColor: '#007bff', borderColor: '#007bff', fontWeight: 'bold' }}>
+              <button type="submit" className="btn-premium w-100 mt-4">
                 {loading ? <Spinner animation="border" size="sm" /> : 'Reset Password'}
               </button>
             </form>
           )}
         </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={closeModal}>
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={closeModal}>
             Close
           </Button>
         </Modal.Footer>

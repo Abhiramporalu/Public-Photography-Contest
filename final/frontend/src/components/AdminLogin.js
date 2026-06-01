@@ -36,50 +36,36 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center" style={{ color: 'purple' }}>Admin Login</h2>
+    <div className="container main-content d-flex justify-content-center align-items-center flex-column">
+      <h2 className="text-center gradient-text mb-4">Admin Login</h2>
       <form
         onSubmit={handleLogin}
-        className="mx-auto shadow p-4 rounded bg-light"
-        style={{ maxWidth: '400px', border: '2px solid purple' }}
+        className="glass-card w-100"
+        style={{ maxWidth: '400px' }}
       >
-        <div className="form-group">
-          <label style={{ fontWeight: 'bold', color: 'purple' }}>Email:</label>
+        <div className="form-group mb-3">
+          <label className="form-label">Email:</label>
           <input
             type="email"
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{ borderColor: 'purple', borderWidth: '2px' }}
           />
         </div>
-        <br />
-        <div className="form-group">
-          <label style={{ fontWeight: 'bold', color: 'purple' }}>Password:</label>
+        <div className="form-group mb-3">
+          <label className="form-label">Password:</label>
           <input
             type="password"
             className="form-control"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ borderColor: 'purple', borderWidth: '2px' }}
           />
         </div>
         <button
           type="submit"
-          className="btn d-block mx-auto mt-4"
-          style={{
-            backgroundColor: "purple",
-            border: "none",
-            fontSize: "20px",
-            color: "white",
-            borderRadius: "5px",
-            padding: "10px",
-            cursor: "pointer",
-            margin: "10px 0",
-            fontWeight: "bold",
-          }}
+          className="btn-premium w-100 mt-4"
         >
           {loading ? <Spinner animation="border" size="sm" /> : 'Login'}
         </button>

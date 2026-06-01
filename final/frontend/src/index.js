@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'; // Import createRoot
 import App from './App';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import { UserAuthProvider } from './context/UserAuthContext';
+import './index.css';
 
 const container = document.getElementById('root');
 const root = createRoot(container); // Create a root

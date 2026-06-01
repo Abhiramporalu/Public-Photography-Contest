@@ -1,3 +1,5 @@
+global.SlowBuffer = global.Buffer;
+require('buffer').SlowBuffer = global.Buffer;
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');

@@ -81,18 +81,18 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <h2 className="text-center text-light" style={{ color: "purple" }}>
+    <div className="container main-content d-flex justify-content-center align-items-center flex-column">
+      <h2 className="text-center gradient-text mb-4">
         Register
       </h2>
       {error && <div className="alert alert-danger text-center">{error}</div>}
       <form
         onSubmit={submitHandler}
-        className="mx-auto shadow p-4 rounded bg-light"
-        style={{ maxWidth: "400px", border: "2px solid purple" }}
+        className="glass-card w-100"
+        style={{ maxWidth: "400px" }}
       >
-        <div className="form-group">
-          <label style={{ fontWeight: "bold", color: "black" }}>
+        <div className="form-group mb-3">
+          <label className="form-label">
             Username:
           </label>
           <input
@@ -100,25 +100,21 @@ const RegisterPage = () => {
             className="form-control"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            style={{ borderColor: "purple", borderWidth: "2px" }}
             required
           />
         </div>
-        <br></br>
-        <div className="form-group">
-          <label style={{ fontWeight: "bold", color: "black" }}>Email:</label>
+        <div className="form-group mb-3">
+          <label className="form-label">Email:</label>
           <input
             type="email"
             className="form-control"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            style={{ borderColor: "purple", borderWidth: "2px" }}
             required
           />
         </div>
-        <br></br>
-        <div className="form-group">
-          <label style={{ fontWeight: "bold", color: "black" }}>
+        <div className="form-group mb-3">
+          <label className="form-label">
             Password:
           </label>
           <input
@@ -130,7 +126,6 @@ const RegisterPage = () => {
               setPassword(pwd);
               setPasswordValidation(validatePasswordRules(pwd));
             }}
-            style={{ borderColor: "purple", borderWidth: "2px" }}
             required
           />
           <ul className="list-unstyled mt-2">
@@ -189,9 +184,8 @@ const RegisterPage = () => {
             letter, a number, and a special character.
           </small>
         </div>
-        <br></br>
-        <div className="form-group">
-          <label style={{ fontWeight: "bold", color: "black" }}>
+        <div className="form-group mb-3">
+          <label className="form-label">
             Confirm Password:
           </label>
           <input
@@ -199,24 +193,12 @@ const RegisterPage = () => {
             className="form-control"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            style={{ borderColor: "purple", borderWidth: "2px" }}
             required
           />
         </div>
         <button
           type="submit"
-          className="btn btn-primary d-block mx-auto mt-4"
-          style={{
-            backgroundColor: "purple",
-            border: "none",
-            fontSize: "20px",
-            color: "white",
-            borderRadius: "5px",
-            padding: "10px",
-            cursor: "pointer",
-            margin: "10px 0",
-            fontWeight: "bold",
-          }}
+          className="btn-premium w-100 mt-4"
           disabled={
             !passwordValidation.length ||
             !passwordValidation.uppercase ||

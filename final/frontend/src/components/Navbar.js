@@ -28,7 +28,7 @@ const NavbarComponent = () => {
 
     return (
         <div>
-            <Navbar expanded={expanded} expand="lg" bg="light" fixed="top">
+            <Navbar expanded={expanded} expand="lg" variant="dark" className="navbar-glass" fixed="top">
                 <Container>
                     <Navbar.Brand as={Link} to="/">Photography Contest</Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" onClick={() => setExpanded(expanded ? false : "expanded")} />
@@ -41,7 +41,7 @@ const NavbarComponent = () => {
                                     {isAdminAuth && (
                                         <Nav.Link as={Link} to="/admin-dashboard" onClick={() => setExpanded(false)}>Dashboard</Nav.Link>
                                     )}
-                                    <Nav.Link as="button" className="btn btn-outline-secondary" onClick={() => { handleLogout(); setExpanded(false); }}>Logout</Nav.Link>
+                                    <Nav.Link as="button" className="btn-outline-premium ms-2 mt-2 mt-lg-0" onClick={() => { handleLogout(); setExpanded(false); }}>Logout</Nav.Link>
                                 </>
                             ) : (
                                 <>
