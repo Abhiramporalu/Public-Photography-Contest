@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 
@@ -19,13 +19,7 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
     }
   }, [successMessage, errorMessage]);
 
-  useEffect(() => {
-    if (contest) {
-      fetchPhotos();
-    }
-  }, [contest]);
-
-  const fetchPhotos = async () => {
+  const fetchPhotos = useCallback(async () => {
     try {
       setLoadingPhotos(true);
 
@@ -47,7 +41,13 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
     } finally {
       setLoadingPhotos(false);
     }
-  };
+  }, [contest]);
+
+  useEffect(() => {
+    if (contest) {
+      fetchPhotos();
+    }
+  }, [contest, fetchPhotos]);
 
   const handleDeletePhoto = async (photo) => {
     try {
@@ -137,7 +137,7 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
                       <img
                         src={photo.photo_url}
                         className="card-img-top"
-                        alt="Contest Photo"
+                        alt="Contest submission"
                       />
                       <div className="card-body">
                         <p>Uploaded by: {photo.uploaded_by}</p>

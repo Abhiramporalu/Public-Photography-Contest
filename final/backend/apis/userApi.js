@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { validationResult } = require('express-validator');
-const nodemailer = require('nodemailer');
+const sendEmail = require('../utils/sendEmail');
 const bcrypt = require('bcryptjs');
 //const dns = require('dns').promises;
 //const validator = require('validator');
@@ -218,23 +218,11 @@ const forgotPassword = async (req, res) => {
 
     const message = `Your OTP for password reset is: ${otp}. It is valid for 10 minutes.`;
 
-    // Create a transporter
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      }
-    });
-
-    const mailOptions = {
-      from: process.env.EMAIL_USER,
+    await sendEmail({
       to: user.email,
       subject: 'Password Reset OTP',
       text: message,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     res.status(200).json({ message: 'OTP sent' });
   } catch (error) {

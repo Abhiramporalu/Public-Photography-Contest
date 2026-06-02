@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator');
 const Photo = require('../models/Photo');
 const checkForWatermark = require('../utils/checkForWatermark');
+const sendEmail = require('../utils/sendEmail');
 
 // Create a new photo
 
@@ -38,6 +39,22 @@ const createPhoto = async (req, res) => {
         });
         const savedPhoto = await photo.save();
         console.log('Photo uploaded:', savedPhoto);
+
+        // Send submission confirmation email asynchronously
+        sendEmail({
+            to: email,
+            subject: `Submission Confirmed: ${contest_title}`,
+            html: `
+              <h3>Your photo has been successfully submitted!</h3>
+              <p>Hi <strong>${uploaded_by}</strong>,</p>
+              <p>We have received your submission for the contest: <strong>${contest_title}</strong>.</p>
+              <p>Your submitted photo can be viewed <a href="${photo_url}">here</a>.</p>
+              <p>Thank you for participating!</p>
+            `
+        }).catch(err => {
+            console.error('Error sending submission confirmation email:', err);
+        });
+
         res.status(200).json(savedPhoto);
     } catch (error) {
         console.error('Create photo error:', error);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
 import axios from "axios";
 import {
   Container,
@@ -159,17 +159,29 @@ const ViewContests = () => {
   
    const today = new Date();
 
-  const ongoingContests = contests.filter(
-    (contest) =>
-      new Date(contest.start_date) <= today &&
-      new Date(contest.end_date) >= today
-  );
-  const pastContests = contests.filter(
-    (contest) => new Date(contest.end_date) < today
-  );
-  const upcomingContests = contests.filter(
-    (contest) => new Date(contest.start_date) > today
-  );
+  const ongoingContests = useMemo(() => {
+    const now = new Date();
+    return contests.filter(
+      (contest) =>
+        new Date(contest.start_date) <= now &&
+        new Date(contest.end_date) >= now
+    );
+  }, [contests]);
+
+  const pastContests = useMemo(() => {
+    const now = new Date();
+    return contests.filter(
+      (contest) => new Date(contest.end_date) < now
+    );
+  }, [contests]);
+
+  const upcomingContests = useMemo(() => {
+    const now = new Date();
+    return contests.filter(
+      (contest) => new Date(contest.start_date) > now
+    );
+  }, [contests]);
+
   useEffect(() => {
     const interval = setInterval(() => {
       const now = new Date();
@@ -192,7 +204,7 @@ const ViewContests = () => {
     }, 1000); // Update every second
   
     return () => clearInterval(interval);
-  }, [contests]);
+  }, [ongoingContests]);
 
   const handleViewClick = (contestTitle, isPast) => {
     setSelectedContest(contestTitle);
@@ -218,13 +230,6 @@ const ViewContests = () => {
     setShowModal(true);
   };
 
-  const handleModalChange = (e) => {
-    const { name, value } = e.target;
-    setModalData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -291,7 +296,8 @@ const ViewContests = () => {
               }
             })
             .catch((error) => {
-              alert("Error submitting photo");
+              const errorMessage = error.response?.data?.error || "Error submitting photo";
+              alert(errorMessage);
               console.error("There was an error submitting the photo!", error);
             });
         } else {

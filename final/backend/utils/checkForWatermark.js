@@ -21,7 +21,15 @@ const checkForWatermark = async (photoUrl) => {
             writer.on('error', reject);
         });
 
-        const { data: { text } } = await Tesseract.recognize(tempFilePath, 'eng');
+        const { data: { text } } = await Tesseract.recognize(
+            tempFilePath,
+            'eng',
+            {
+                errorHandler: (err) => {
+                    console.error('Tesseract worker error caught:', err);
+                }
+            }
+        );
         fs.unlinkSync(tempFilePath);
 
         const lowerText = text.toLowerCase();
