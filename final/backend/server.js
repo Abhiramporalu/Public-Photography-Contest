@@ -26,7 +26,20 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Update this to match your frontend's URL
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        
+        // Dynamically allow localhost and vercel.app subdomains
+        const isLocalhost = origin.startsWith('http://localhost:') || origin === 'http://localhost';
+        const isVercel = origin.endsWith('.vercel.app');
+
+        if (isLocalhost || isVercel) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true, // This allows the browser to send cookies with the requests
 };
 app.use(cors(corsOptions));
