@@ -13,7 +13,10 @@ const seed = async () => {
     
     const existing = await Admin.findOne({ email });
     if (existing) {
-      console.log('Admin user already exists with email:', email);
+      console.log('Admin user already exists. Updating password to AdminPassword123!...');
+      existing.password = password;
+      await existing.save();
+      console.log('Admin password updated successfully!');
       process.exit(0);
     }
     
