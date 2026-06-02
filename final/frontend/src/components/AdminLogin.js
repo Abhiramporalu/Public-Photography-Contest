@@ -29,7 +29,8 @@ const AdminLogin = () => {
       navigate('/admin-dashboard'); // Redirect to admin dashboard after successful login
     } catch (error) {
       console.error('Admin login error:', error);
-      alert('Invalid email or password. Please try again.');
+      const errMsg = error.response?.data?.message || 'Invalid email or password. Please try again.';
+      alert(errMsg);
     } finally {
       setLoading(false);
     }
