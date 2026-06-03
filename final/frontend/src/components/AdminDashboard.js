@@ -5,6 +5,35 @@ import { Modal, Button } from "react-bootstrap";
 import AdminContestPhotos from "./AdminContestPhotos";
 import { AdminAuthContext } from "../context/AdminAuthContext";
 
+// Parse a timezone-less string from datetime-local input (assumed IST) to a UTC ISO string
+const parseISTDateToUTC = (dateString) => {
+  if (!dateString) return "";
+  // If it already has a timezone indicator (like 'Z' or offset), parse normally
+  if (dateString.includes('Z') || dateString.match(/[+-]\d{2}:\d{2}$/)) {
+    return new Date(dateString).toISOString();
+  }
+  // Otherwise append the IST offset (+05:30)
+  return new Date(dateString + "+05:30").toISOString();
+};
+
+// Format a UTC date string from the database to YYYY-MM-DDTHH:mm representing the local IST representation
+const formatUTCDateToISTInput = (dateString) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  // Convert UTC date to IST date by adding 5.5 hours offset
+  const istOffset = 5.5 * 60 * 60 * 1000;
+  const istDate = new Date(date.getTime() + istOffset);
+  
+  // Format as YYYY-MM-DDTHH:mm
+  const pad = (num) => String(num).padStart(2, '0');
+  const year = istDate.getUTCFullYear();
+  const month = pad(istDate.getUTCMonth() + 1);
+  const day = pad(istDate.getUTCDate());
+  const hours = pad(istDate.getUTCHours());
+  const minutes = pad(istDate.getUTCMinutes());
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+};
+
 const AdminDashboard = () => {
   const [contests, setContests] = useState([]);
   const [newContest, setNewContest] = useState({
@@ -65,10 +94,15 @@ const AdminDashboard = () => {
     }
 
     try {
+      const contestData = {
+        ...newContest,
+        start_date: parseISTDateToUTC(newContest.start_date),
+        end_date: parseISTDateToUTC(newContest.end_date),
+      };
       // If the contest title doesn't exist, proceed to create it
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/contests/insert`,
-        newContest,
+        contestData,
         {
           headers: {
             "x-api-key": process.env.REACT_APP_API_KEY,
@@ -150,7 +184,11 @@ const AdminDashboard = () => {
   };
 
   const handleEditContest = (contest) => {
-    setEditContest(contest);
+    setEditContest({
+      ...contest,
+      start_date: formatUTCDateToISTInput(contest.start_date),
+      end_date: formatUTCDateToISTInput(contest.end_date),
+    });
     setShowEditModal(true);
   };
 
@@ -171,10 +209,11 @@ const AdminDashboard = () => {
       await axios.put(
         `${process.env.REACT_APP_API_URL}/api/contests/update`,
         {
+          id: editContest._id,
           title: editContest.title,
           description: editContest.description,
-          start_date: editContest.start_date,
-          end_date: editContest.end_date,
+          start_date: parseISTDateToUTC(editContest.start_date),
+          end_date: parseISTDateToUTC(editContest.end_date),
         },
         {
           headers: {
@@ -404,6 +443,7 @@ const AdminDashboard = () => {
           contest={viewContest}
           show={!!viewContest}
           onHide={() => setViewContest(null)}
+          onWinnerDeclared={fetchContests}
         />
       )}
     </div>

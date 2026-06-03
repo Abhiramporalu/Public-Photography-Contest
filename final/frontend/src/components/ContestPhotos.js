@@ -7,6 +7,7 @@ import { AdminAuthContext } from '../context/AdminAuthContext';
 const ContestPhotos = ({ contestTitle, onBack }) => {
     const [photos, setPhotos] = useState([]);
     const [votedPhoto, setVotedPhoto] = useState(null);
+    const [voteCounts, setVoteCounts] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -45,6 +46,14 @@ const ContestPhotos = ({ contestTitle, onBack }) => {
                     setVotedPhoto(userVote.photo_url);
                 }
 
+                // Count votes for each photo
+                const contestVotes = votesResponse.data.filter(vote => vote.contest_title === contestTitle);
+                const counts = contestVotes.reduce((acc, vote) => {
+                    acc[vote.photo_url] = (acc[vote.photo_url] || 0) + 1;
+                    return acc;
+                }, {});
+                setVoteCounts(counts);
+
                 setLoading(false);
             } catch (error) {
                 setError(error);
@@ -56,6 +65,10 @@ const ContestPhotos = ({ contestTitle, onBack }) => {
     }, [contestTitle, loggedInEmail]);
 
     const handleVote = async (photoUrl) => {
+        if (!loggedInEmail) {
+            alert("Please login to vote.");
+            return;
+        }
         if (votedPhoto) {
             alert("You have already voted for this contest.");
             return; // Prevent re-voting
@@ -74,6 +87,10 @@ const ContestPhotos = ({ contestTitle, onBack }) => {
             });
 
             setVotedPhoto(photoUrl);
+            setVoteCounts(prev => ({
+                ...prev,
+                [photoUrl]: (prev[photoUrl] || 0) + 1
+            }));
             console.log('Vote submitted successfully', response.data);
         } catch (error) {
             console.error('There was an error submitting the vote!', error);
@@ -93,6 +110,7 @@ const ContestPhotos = ({ contestTitle, onBack }) => {
                             <Card.Img variant="top" src={photo.photo_url} />
                             <Card.Body>
                                 <Card.Text>Uploaded by: {photo.uploaded_by}</Card.Text>
+                                <Card.Text><strong>Votes:</strong> {voteCounts[photo.photo_url] || 0}</Card.Text>
                                 <Button
                                     variant={votedPhoto === photo.photo_url ? "success" : "primary"}
                                     onClick={() => handleVote(photo.photo_url)}

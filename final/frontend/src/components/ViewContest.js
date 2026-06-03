@@ -212,6 +212,10 @@ const ViewContests = () => {
   };
 
   const handleJoinClick = (contest) => {
+    if (!loggedInUser) {
+      alert("Please login to join the contest.");
+      return;
+    }
     // Ensure userPhotos is updated and contains the current user's photos
     const existingPhoto = userPhotos.find(
       (photo) =>
@@ -357,12 +361,20 @@ const ViewContests = () => {
                 Wait
               </Button>
             ) : (
-              <Button
-                className="btn-premium"
-                onClick={() => handleJoinClick(contest)}
-              >
-                Join
-              </Button>
+              <>
+                <Button
+                  className="btn-premium me-2"
+                  onClick={() => handleJoinClick(contest)}
+                >
+                  Join
+                </Button>
+                <Button
+                  className="btn-outline-premium"
+                  onClick={() => handleViewClick(contest.title, false)}
+                >
+                  Vote
+                </Button>
+              </>
             )}
             </div>
           </Card.Body>

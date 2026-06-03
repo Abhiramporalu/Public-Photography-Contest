@@ -2,9 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 
-const AdminContestPhotos = ({ contest, show, onHide }) => {
+const AdminContestPhotos = ({ contest, show, onHide, onWinnerDeclared }) => {
   const [photos, setPhotos] = useState([]);
+  const [voteCounts, setVoteCounts] = useState({});
   const [loadingPhotos, setLoadingPhotos] = useState(false);
+  const [winnerDeclared, setWinnerDeclared] = useState(false);
+  const [winnerName, setWinnerName] = useState("");
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,8 +39,27 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
         (photo) => photo.contest_title === contest.title
       );
       setPhotos(filteredPhotos);
+
+      // Fetch votes
+      const votesResponse = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/votes/fetch`,
+        {
+          headers: {
+            "x-api-key": process.env.REACT_APP_API_KEY,
+          },
+          withCredentials: true,
+        }
+      );
+      const filteredVotes = votesResponse.data.filter(
+        (vote) => vote.contest_title === contest.title
+      );
+      const counts = filteredVotes.reduce((acc, vote) => {
+        acc[vote.photo_url] = (acc[vote.photo_url] || 0) + 1;
+        return acc;
+      }, {});
+      setVoteCounts(counts);
     } catch (error) {
-      console.error("Error fetching photos:", error);
+      console.error("Error fetching photos and votes:", error);
     } finally {
       setLoadingPhotos(false);
     }
@@ -45,6 +67,8 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
 
   useEffect(() => {
     if (contest) {
+      setWinnerDeclared(contest.status === 'ended' || !!contest.winnerName);
+      setWinnerName(contest.winnerName || "");
       fetchPhotos();
     }
   }, [contest, fetchPhotos]);
@@ -94,6 +118,54 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
     }
   };
 
+  const getWinner = useCallback(() => {
+    if (photos.length === 0) return null;
+    let maxVotes = -1;
+    let winner = null;
+    photos.forEach(photo => {
+      const votes = voteCounts[photo.photo_url] || 0;
+      if (votes > maxVotes) {
+        maxVotes = votes;
+        winner = photo;
+      }
+    });
+    return { winner, maxVotes };
+  }, [photos, voteCounts]);
+
+  const handleDeclareWinner = async () => {
+    const winnerData = getWinner();
+    if (!winnerData || !winnerData.winner) {
+      alert("No submissions available to declare a winner.");
+      return;
+    }
+
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/contests/end`,
+        {
+          title: contest.title,
+          winnerPhotoUrl: winnerData.winner.photo_url,
+          winnerName: winnerData.winner.uploaded_by,
+        },
+        {
+          headers: {
+            "x-api-key": process.env.REACT_APP_API_KEY,
+          },
+          withCredentials: true,
+        }
+      );
+      setSuccessMessage(`Winner ${winnerData.winner.uploaded_by} declared successfully! Emails sent to users.`);
+      setWinnerDeclared(true);
+      setWinnerName(winnerData.winner.uploaded_by);
+      if (onWinnerDeclared) {
+        onWinnerDeclared();
+      }
+    } catch (error) {
+      console.error("Error declaring winner:", error);
+      setErrorMessage("Failed to declare winner. Please try again.");
+    }
+  };
+
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
@@ -129,6 +201,23 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
           </div>
         ) : (
           <>
+            {winnerDeclared ? (
+              <div className="alert alert-success py-2 mb-3 text-center">
+                🎉 <strong>Winner Declared:</strong> {winnerName}
+              </div>
+            ) : (
+              photos.length > 0 && (() => {
+                const winnerData = getWinner();
+                if (winnerData && winnerData.winner) {
+                  return (
+                    <div className="alert alert-info py-2 mb-3">
+                      👑 <strong>Current Leader:</strong> {winnerData.winner.uploaded_by} ({winnerData.maxVotes} votes)
+                    </div>
+                  );
+                }
+                return null;
+              })()
+            )}
             {photos.length > 0 ? (
               <div className="row">
                 {photos.map((photo) => (
@@ -141,6 +230,7 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
                       />
                       <div className="card-body">
                         <p>Uploaded by: {photo.uploaded_by}</p>
+                        <p><strong>Votes:</strong> {voteCounts[photo.photo_url] || 0}</p>
                         {loadingDelete ? (
                           <div className="text-center">
                             <Spinner
@@ -173,6 +263,15 @@ const AdminContestPhotos = ({ contest, show, onHide }) => {
         )}
       </Modal.Body>
       <Modal.Footer>
+        {photos.length > 0 && (
+          <Button 
+            variant="success" 
+            onClick={handleDeclareWinner}
+            disabled={winnerDeclared}
+          >
+            {winnerDeclared ? "Winner Declared" : "Declare Winner"}
+          </Button>
+        )}
         <Button variant="secondary" onClick={onHide}>
           Close
         </Button>
